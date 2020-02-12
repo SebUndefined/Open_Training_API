@@ -1,7 +1,7 @@
 import { createExpressServer, useContainer } from 'routing-controllers';
 import dotenv from "dotenv";
 import { Container } from "typedi";
-import Banner from './lib/logger/banner'
+import Banner from './lib/logger/Banner'
 
 class App {
     static async initialize() {

@@ -52,7 +52,7 @@ export class Logger {
 
     private log(level: string, message: string, args: any[]): void {
         if (winston) {
-            winston[level](`${this.formatScope()} ${message}`, args);
+            (winston as { [key: string]: any })[level](`${this.formatScope()} ${message}`, args);
         }
     }
 
