@@ -1,7 +1,8 @@
-import { JsonController, Get } from "routing-controllers";
+import { JsonController, Get, QueryParams } from "routing-controllers";
 import { OpenAPI } from 'routing-controllers-openapi';
 import { LoggerInterface } from '../../lib/logger/Index';
 import { Logger } from '../../decorators/Logger';
+import GetEmployeesQuery from '../../lib/queryParam/GetEmployeesQuery';
 
 
 @JsonController()
@@ -16,8 +17,9 @@ export class HomeController {
 
     @Get()
     @OpenAPI({})
-    public find(): object {
+    public find(@QueryParams() query: GetEmployeesQuery): object {
         this.logger.debug("Log")
+        console.log(query)
         return { name: 'Pouet' };
     }
 
