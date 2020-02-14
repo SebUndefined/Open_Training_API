@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import Employee from '../models/entities/Employee';
+import { Employee } from '../models/entities/Employee';
 
 
 @Service()

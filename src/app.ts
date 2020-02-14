@@ -2,6 +2,7 @@ import { createExpressServer, useContainer } from 'routing-controllers';
 import dotenv from "dotenv";
 import { Container } from "typedi";
 import Banner from './lib/logger/Banner'
+import Loader from './lib/loaders';
 
 class App {
     static async initialize() {
@@ -9,6 +10,7 @@ class App {
         try {
             dotenv.config();
             useContainer(Container);
+            await Loader.loadAll();
             createExpressServer({
                 cors: true,
                 controllers: [__dirname + "/api/controllers/*{.js,.ts}"],
