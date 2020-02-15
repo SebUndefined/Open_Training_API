@@ -21,10 +21,9 @@ export class EmployeeController {
 
     @Get('/')
     @OpenAPI({})
-    public findAll(@QueryParams() query: GetEmployeesQuery): object {
+    public findAll(@QueryParams() query: GetEmployeesQuery) {
         this.logger.debug("Log")
-        console.log(query)
-        return { name: 'Pouet' };
+        return this.employeeService.findAll(query);
     }
 
     @Get('/:id')

@@ -7,9 +7,9 @@ import Loader from './lib/loaders';
 class App {
     static async initialize() {
         Banner.printTitle("Open Training API");
+        dotenv.config();
+        useContainer(Container);
         try {
-            dotenv.config();
-            useContainer(Container);
             await Loader.loadAll();
             createExpressServer({
                 cors: true,
