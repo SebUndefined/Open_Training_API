@@ -1,6 +1,6 @@
 import { JsonController, Get, QueryParams, OnUndefined, Param } from "routing-controllers";
 import { OpenAPI } from 'routing-controllers-openapi';
-import { LoggerInterface } from '../../lib/logger/Index';
+import { LoggerInterface } from '../../lib/logger/index';
 import { Logger } from '../../decorators/Logger';
 import GetEmployeesQuery from '../../lib/queryParam/GetEmployeesQuery';
 import { EmployeeService } from '../services/EmployeeService';
