@@ -1,10 +1,12 @@
-import { JsonController, Get, QueryParams, OnUndefined, Param } from "routing-controllers";
+import { JsonController, Get, QueryParams, OnUndefined, Param, Res } from "routing-controllers";
 import { OpenAPI } from 'routing-controllers-openapi';
-import { LoggerInterface } from '../../lib/logger/index';
+import { LoggerInterface } from '../../lib/logger/Index';
 import { Logger } from '../../decorators/Logger';
 import GetEmployeesQuery from '../../lib/queryParam/GetEmployeesQuery';
 import { EmployeeService } from '../services/EmployeeService';
 import { EmployeeNotFoundError } from '../errors/EmployeeNotFound';
+import { Employee } from '../models/entities/Employee';
+import { EmployeeDto } from '../models/dtos/EmployeeDto';
 
 
 @JsonController('/employees')
@@ -21,9 +23,10 @@ export class EmployeeController {
 
     @Get('/')
     @OpenAPI({})
-    public findAll(@QueryParams() query: GetEmployeesQuery) {
+    public async findAll(@QueryParams() query: GetEmployeesQuery) {
         this.logger.debug("Log")
-        return this.employeeService.findAll(query);
+        const employees: EmployeeDto[] = await this.employeeService.findAll(query);
+        return employees;
     }
 
     @Get('/:id')
@@ -35,3 +38,5 @@ export class EmployeeController {
     }
 
 }
+
+

@@ -1,5 +1,5 @@
 import {Service} from "typedi";
-import {EntityManager} from "typeorm";
+import {EntityManager, OrderByCondition} from "typeorm";
 import {InjectManager} from "typeorm-typedi-extensions";
 import { Employee } from '../models/entities/Employee';
 
@@ -12,11 +12,21 @@ export class EmployeeRepository {
         this.entityManager = entityManager
     }
 
-    public async findAll(limit: number, offset:number): Promise<Employee[]> {
-        return this.entityManager.createQueryBuilder(Employee, 'emp')
-                                    .limit(limit)
-                                    .offset(offset)
-                                    .getMany();
+    public async findAll(limit: number, offset:number, sorting: Map<string, "ASC" | "DESC">): Promise<Employee[]> {
+        const query = this.entityManager.createQueryBuilder(Employee, 'emp');
+        query.limit(limit).offset(offset)
+        let i = 1;
+        console.log(sorting)
+        sorting.forEach((value, key, map) => {
+            if(i == 1){
+                query.orderBy(key, value)
+            }
+            else {
+                query.addOrderBy(key, value)
+            }
+            i++;
+        })
+        return query.getMany();
     }
     
 }
