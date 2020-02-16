@@ -1,7 +1,7 @@
 import { GraphQLScalarType, Kind } from "graphql";
 import { ArgsType, Field } from 'type-graphql';
 
-export type OrderBy = {
+export class OrderBy {
     field: String;
     direction:"ASC" | "DESC"
 }
@@ -25,7 +25,11 @@ export const OrderByScalar = new GraphQLScalarType({
       console.log(ast)
     if (ast.kind === Kind.OBJECT) {
         console.log(ast.fields)
-    //   return new OrderBy({ast.field, ast.}); // value from the client query
+        let order: OrderBy[];
+        let one = new OrderBy();
+        one.field : StringValue = ast.fields[0].value.value;
+        order.push(new OrderBy(){ as})
+        return new OrderBy() ast., ast.}); // value from the client query
     }
     return null;
   },
