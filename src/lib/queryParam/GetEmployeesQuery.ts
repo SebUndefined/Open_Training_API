@@ -1,6 +1,5 @@
 import { IsPositive } from 'class-validator';
 import GetBaseQuery from './GetBaseQuery';
-import { BadRequestError } from 'routing-controllers';
 
 enum EmployeeField {
     BirthDate = 'birthDate',
@@ -22,11 +21,11 @@ export default class GetEmployeesQuery extends GetBaseQuery {
                     mapOrderBy.set(fieldName, keyValue[0] === 'desc' ? "DESC" : "ASC")
                 }
                 else {
-                    throw new BadRequestError(keyValue[1] + " is not part of employee data")
+                    throw new Error(keyValue[1] + " is not part of employee data")
                 }
             }
             else {
-                throw new BadRequestError(keyValue + " is not a valid sort string param !!")
+                throw new Error(keyValue + " is not a valid sort string param !!")
             }
         }
         return mapOrderBy;

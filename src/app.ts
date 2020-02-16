@@ -1,17 +1,17 @@
-import { createExpressServer, useContainer } from 'routing-controllers';
+import 'reflect-metadata'
 import dotenv from "dotenv";
+import Express from 'express'
 import { Container } from "typedi";
 import Banner from './lib/logger/Banner'
 import Loader from './lib/loaders';
 import { ApolloServer } from 'apollo-server-express'
 import { buildSchema } from 'type-graphql';
-import { EmployeeResolver } from './api/resolvers/GraphQLTest';
+import { EmployeeResolver } from './api/resolvers/EmployeeResolver';
 
 class App {
     static async initialize() {
         Banner.printTitle("Open Training API");
         dotenv.config();
-        useContainer(Container);
         const schema = await buildSchema({
             resolvers: [EmployeeResolver],
             dateScalarMode: "isoDate",
@@ -20,10 +20,7 @@ class App {
         const apolloServer = new ApolloServer({schema});
         try {
             await Loader.loadAll();
-            const app = createExpressServer({
-                cors: true,
-                controllers: [__dirname + "/api/controllers/*{.js,.ts}"],
-            })
+            const app = Express();
             apolloServer.applyMiddleware({ app })
             app.listen(process.env.APP_PORT)
         } catch (error) {

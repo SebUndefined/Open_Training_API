@@ -1,7 +1,7 @@
-import { HttpError } from 'routing-controllers';
 
-export class EmployeeNotFoundError extends HttpError {
+
+export class EmployeeNotFoundError {
     constructor() {
-        super(404, 'Employee not Found !');
+        // super(404, 'Employee not Found !');
     }
 }

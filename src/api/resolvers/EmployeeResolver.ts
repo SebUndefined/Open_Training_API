@@ -4,22 +4,12 @@ import { MaxLength, Length, ArrayMaxSize, Min, Max } from 'class-validator';
 import { Employee } from '../models/entities/Employee';
 import { EmployeeService } from '../services/EmployeeService';
 import { Service } from 'typedi';
-
-@ArgsType()
-class EmployeesArgs {
-  @Field(type => Int)
-  @Min(0)
-  page_number: number = 1;
-
-  @Field(type => Int)
-  @Min(1)
-  @Max(50)
-  page_size: number = 25;
-}
+import { EmployeesArgs } from '../types/argsTypes/EmployeesArgs';
 
 
-@Resolver(Employee)
+
 @Service()
+@Resolver(Employee)
 export class EmployeeResolver {
   private employeeService: EmployeeService;
   constructor(employeeService: EmployeeService) {
@@ -36,13 +26,11 @@ export class EmployeeResolver {
   // }
 
   @Query(returns => [Employee])
-  employees(@Args() { page_number, page_size }: EmployeesArgs) {
-    try {
-      const employees = this.employeeService.findAllEmployees({ page_number, page_size });
-      return employees;
-    } catch(error) {
-      throw new Error("erreur")
-    }
+  employees(@Args() employeesArgs: EmployeesArgs) {
+    console.log(employeesArgs)
+    const employees = this.employeeService.findAllEmployees(employeesArgs);
+    return employees;
+    
   }
 
 //   @Mutation(returns => Recipe)
