@@ -1,6 +1,6 @@
 import { ArgsType, Field, Int } from "type-graphql";
 import { Min, Max } from 'class-validator';
-import { OrderBy, OrderByScalar } from '../../../lib/scalar/CustomScalarList';
+import { Anything } from '../../../lib/scalar/CustomScalarList';
 
 @ArgsType()
 export class EmployeesArgs {
@@ -11,6 +11,6 @@ export class EmployeesArgs {
   @Min(1)
   @Max(50)
   page_size: number = 25;
-  @Field(type => OrderByScalar)
-  order_by: OrderBy[] = []
+  @Field(type => Anything)
+  order_by: Object
 }
