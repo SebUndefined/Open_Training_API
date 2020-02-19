@@ -10,7 +10,9 @@ export enum NullOrderBy {
     NULLS_LAST = "NULLS LAST"
 }
 
-
+// https://stackoverflow.com/questions/45598812/graphql-blackbox-any-type
+// https://stackoverflow.com/questions/46562561/apollo-graphql-field-type-for-object-with-dynamic-keys
+// https://stackoverflow.com/questions/56705157/best-way-to-define-a-map-object-in-graphql-schema
 
 export const Anything = new GraphQLScalarType({
     name: 'Anything',
