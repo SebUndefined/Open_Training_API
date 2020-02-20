@@ -1,0 +1,51 @@
+import { GraphQLInterfaceType, Kind, ValueNode, GraphQLFieldConfigMap, GraphQLString, GraphQLObjectType, GraphQLList, GraphQLScalarType, BreakingChangeType } from "graphql";
+import { OrderByCondition } from 'typeorm';
+
+export enum DirectionOrderBy{
+    ASC,
+    DESC
+}
+export enum NullOrderBy {
+    NULLS_FIRST = "NULLS FIRST",
+    NULLS_LAST = "NULLS LAST"
+}
+
+// https://stackoverflow.com/questions/45598812/graphql-blackbox-any-type
+// https://stackoverflow.com/questions/46562561/apollo-graphql-field-type-for-object-with-dynamic-keys
+// https://stackoverflow.com/questions/56705157/best-way-to-define-a-map-object-in-graphql-schema
+
+export const Anything = new GraphQLScalarType({
+    name: 'Anything',
+    description: 'Any value.',
+    parseValue: (value) => value,
+    parseLiteral,
+    serialize: (value) => value,
+  })
+  
+  function parseLiteral (ast: any) {
+    switch (ast.kind) {
+      case Kind.BOOLEAN:
+      case Kind.STRING:  
+        console.log("string")
+        return ast.value
+      case Kind.INT:
+      case Kind.FLOAT:
+        console.log("number")
+        return Number(ast.value)
+      case Kind.LIST:
+        console.log("list")
+        return ast.values.map(parseLiteral)
+      case Kind.OBJECT:
+        console.log("Object")
+        return ast.fields.reduce((accumulator: any, field: any) => {
+          accumulator[field.name.value] = parseLiteral(field.value)
+          console.log(accumulator)
+          return accumulator
+        }, {})
+      case Kind.NULL:
+          return null
+      default:
+        throw new Error(`Unexpected kind in parseLiteral: ${ast.kind}`)
+    }
+  }
+

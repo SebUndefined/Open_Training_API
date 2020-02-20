@@ -1,46 +1,38 @@
-import { GraphQLInterfaceType, Kind, ValueNode, GraphQLFieldConfigMap, GraphQLString, GraphQLObjectType, GraphQLList, GraphQLScalarType, BreakingChangeType } from "graphql";
-import { OrderByCondition } from 'typeorm';
+import { InputType, Field, registerEnumType } from 'type-graphql';
+
 
 export enum DirectionOrderBy{
-    ASC,
-    DESC
+    ASC = "ASC",
+    DESC = "DESC"
 }
+
 export enum NullOrderBy {
     NULLS_FIRST = "NULLS FIRST",
     NULLS_LAST = "NULLS LAST"
 }
 
+registerEnumType(DirectionOrderBy, {
+    name: "DirectionOrderBy", // this one is mandatory
+    description: "The basic directions", // this one is optional
+});
+
+registerEnumType(NullOrderBy, {
+    name: "NullOrderBy", // this one is mandatory
+    description: "The basic directions", // this one is optional
+});
+
+
+@InputType()
+export class OrderByConditionGraphQL {
+    @Field()
+    field:string;
+    @Field(type => DirectionOrderBy)
+    direction: DirectionOrderBy;
+    @Field(type => NullOrderBy)
+    nulls: NullOrderBy;
+}
+
 // https://stackoverflow.com/questions/45598812/graphql-blackbox-any-type
 // https://stackoverflow.com/questions/46562561/apollo-graphql-field-type-for-object-with-dynamic-keys
 // https://stackoverflow.com/questions/56705157/best-way-to-define-a-map-object-in-graphql-schema
-
-export const Anything = new GraphQLScalarType({
-    name: 'Anything',
-    description: 'Any value.',
-    parseValue: (value) => value,
-    parseLiteral,
-    serialize: (value) => value,
-  })
-  
-  function parseLiteral (ast: any) {
-    switch (ast.kind) {
-      case Kind.BOOLEAN:
-      case Kind.STRING:  
-        return ast.value
-      case Kind.INT:
-      case Kind.FLOAT:
-        return Number(ast.value)
-      case Kind.LIST:
-        return ast.values.map(parseLiteral)
-      case Kind.OBJECT:
-        return ast.fields.reduce((accumulator: any, field: any) => {
-          accumulator[field.name.value] = parseLiteral(field.value)
-          return accumulator
-        }, {})
-      case Kind.NULL:
-          return null
-      default:
-        throw new Error(`Unexpected kind in parseLiteral: ${ast.kind}`)
-    }
-  }
 
