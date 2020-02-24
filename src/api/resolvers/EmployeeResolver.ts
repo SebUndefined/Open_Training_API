@@ -11,27 +11,29 @@ import { EmployeesArgs } from '../types/argsTypes/EmployeesArgs';
 @Service()
 @Resolver(Employee)
 export class EmployeeResolver {
-  private employeeService: EmployeeService;
-  constructor(employeeService: EmployeeService) {
-    this.employeeService = employeeService;
-  }
+    private employeeService: EmployeeService;
+    constructor(employeeService: EmployeeService) {
+        this.employeeService = employeeService;
+    }
 
-  // @Query(returns => Employee)
-  // async recipe(@Arg("id") id: string) {
-  //   const recipe = await this.employeeService.findById(id);
-  //   if (recipe === undefined) {
-  //     console.log("pouet")
-  //   }
-  //   return recipe;
-  // }
+  
+    @Query(returns => [Employee])
+    employees(@Args() employeesArgs: EmployeesArgs) {
+        const employees = this.employeeService.findAll(employeesArgs);
+        return employees;
+        
+    }
 
-  @Query(returns => [Employee])
-  employees(@Args() employeesArgs: EmployeesArgs) {
-    console.log(employeesArgs)
-    const employees = this.employeeService.findAllEmployees(employeesArgs);
-    return employees;
-    
-  }
+    @Query(returns => Employee)
+    async employee(@Arg("id") id: number) {
+        const employee = await this.employeeService.findById(id);
+        console.log(employee)
+        if (employee === undefined) {
+            console.log("test")
+            return null;
+        }
+        return employee;
+    }
 
 //   @Mutation(returns => Recipe)
 //   @Authorized()

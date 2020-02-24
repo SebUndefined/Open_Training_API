@@ -5,28 +5,27 @@ import { Employee } from '../models/entities/Employee';
 
 @Service()
 export class EmployeeRepository {
-    
+
     private entityManager: EntityManager
 
     constructor(@InjectManager() entityManager: EntityManager) {
         this.entityManager = entityManager
     }
 
-    public async findAll(limit: number, offset:number, sorting: Map<string, "ASC" | "DESC">): Promise<Employee[]> {
-        const query = this.entityManager.createQueryBuilder(Employee, 'emp');
+    public async findAll(limit: number, offset:number, orderBy: OrderByCondition): Promise<Employee[]> {
+        const query = this.entityManager.createQueryBuilder(Employee, 'employees');
         query.limit(limit).offset(offset)
         let i = 1;
-        console.log(sorting)
-        sorting.forEach((value, key, map) => {
-            if(i == 1){
-                query.orderBy(key, value)
-            }
-            else {
-                query.addOrderBy(key, value)
-            }
-            i++;
-        })
+        query.orderBy(orderBy);
+        
         return query.getMany();
+    }
+
+    public async findByID(id: number): Promise<Employee> {
+        const query = this.entityManager.createQueryBuilder(Employee, 'employees');
+        query.where("id = :id", {id: id});
+        const employee : Promise<Employee> = query.getOne();
+        return employee;
     }
     
 }

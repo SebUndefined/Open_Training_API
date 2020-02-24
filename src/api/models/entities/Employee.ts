@@ -1,9 +1,10 @@
 import { Length, IsEnum } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ObjectType, Field, ID } from 'type-graphql';
 import {
   GraphQLDate,
 } from 'graphql-iso-date';
+import { Salary } from './Salary';
 
 export enum Gender {
     Male = 'M',
@@ -35,4 +36,8 @@ export class Employee {
     @Column({ type: "date" } )
     @Field(type => GraphQLDate,{ nullable: false })
     hireDate: Date;
+    // Relations
+    @Field(() => [Salary], { nullable: true })
+    @OneToMany(type => Salary, salary => salary.employee)
+    salaries: Salary[];
 }

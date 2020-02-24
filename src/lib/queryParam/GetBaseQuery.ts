@@ -1,4 +1,6 @@
 import { IsPositive, Max, IsArray } from 'class-validator';
+import { OrderByCondition } from 'typeorm';
+import { OrderByConditionGraphQL } from '../scalar/CustomScalarList';
 
 
 export default abstract class GetBaseQuery {
@@ -7,10 +9,10 @@ export default abstract class GetBaseQuery {
     @Max(100)
     page_size: number = 25;
     @IsArray()
-    sort_by: string[] = [];
+    sort_by: OrderByConditionGraphQL[];
 
 
-    public abstract getSort_by_Formated(): Map<string, "ASC" | "DESC">;
+    public abstract getSort_by_Formated(): OrderByCondition;
 
     protected static formatFieldName(theString: string) {
         return theString.charAt(0).toUpperCase() + theString.slice(1);
