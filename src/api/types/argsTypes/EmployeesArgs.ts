@@ -17,21 +17,22 @@ export class EmployeesArgs {
     @Max(50)
     page_size: number = 25;
     @Field(type => [OrderByConditionGraphQL])
-    order_by: OrderByConditionGraphQL[];
+    order_by: OrderByConditionGraphQL[] = [];
 
     public  getSort_by_Formated(): OrderByCondition {
         let mapOrderBy: OrderByCondition = {};
         for(let od of this.order_by) {
             let key = od.field;
-            if(!od.field.startsWith("employees.")) {
-                key = 'employees.' + key;
-            }
-            if(Object.values(EmployeeField).some((v) => v === key)){
-                mapOrderBy[key] = od.direction;
-            }
-            else {
-                throw new Error("We cannot use field " + key + " for sorting employees");
-            }
+            mapOrderBy[key] = od.direction;
+            // if(!od.field.startsWith("employees.")) {
+            //     key = 'employees.' + key;
+            // }
+            // if(Object.values(EmployeeField).some((v) => v === key)){
+            //     mapOrderBy[key] = od.direction;
+            // }
+            // else {
+            //     throw new Error("We cannot use field " + key + " for sorting employees");
+            // }
         }
         return mapOrderBy;
     }

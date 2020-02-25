@@ -2,33 +2,30 @@ import { Service } from 'typedi';
 import { Employee } from '../models/entities/Employee';
 import { EmployeeRepository } from '../repositories/EmployeeRepository';
 import GetEmployeesQuery from '../../lib/queryParam/GetEmployeesQuery';
-import { OrderByCondition } from 'typeorm';
+import { OrderByCondition, Repository } from 'typeorm';
 import { EmployeeDto } from '../models/dtos/EmployeeDto';
 import { EmployeesArgs } from '../types/argsTypes/EmployeesArgs';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
 
 @Service()
 export class EmployeeService {
     private employeeRepository: EmployeeRepository
 
-    constructor(employeeRepository: EmployeeRepository) {
+    constructor(@InjectRepository(Employee) employeeRepository: EmployeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
     public async findAll(employeesArgs: EmployeesArgs) : Promise<Employee[]> {
         const offset = (employeesArgs.page_number - 1) * employeesArgs.page_size;
         let sorting : OrderByCondition = employeesArgs.getSort_by_Formated();
-        const employees = await this.employeeRepository.findAll(employeesArgs.page_size, offset, sorting);
-        return employees;
+        const listEmpl: Employee[] = await this.employeeRepository.findAll(offset, employeesArgs.page_size, sorting);
+        return listEmpl;
     }
 
     public async findById(id:number): Promise<Employee> | undefined {
-        try {
-            const employee : Promise<Employee> = this.employeeRepository.findByID(id);
+            const employee: Employee = await this.employeeRepository.findOneById(id)
             return employee;
-        } catch(error) {
-            throw new Error(error)
-        }
     }
 
     // public async findAll(query: GetEmployeesQuery): Promise<EmployeeDto[]> {

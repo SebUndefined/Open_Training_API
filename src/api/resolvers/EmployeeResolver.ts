@@ -1,4 +1,4 @@
-import { ObjectType, ID, Resolver, Query, Arg, Args, Mutation, Authorized, Ctx, InputType, ArgsType, Int } from "type-graphql";
+import { ObjectType, ID, Resolver, Query, Arg, Args, Mutation, Authorized, Ctx, InputType, ArgsType, Int, Info } from "type-graphql";
 import { Field } from 'type-graphql';
 import { MaxLength, Length, ArrayMaxSize, Min, Max } from 'class-validator';
 import { Employee } from '../models/entities/Employee';
@@ -18,18 +18,16 @@ export class EmployeeResolver {
 
   
     @Query(returns => [Employee])
-    employees(@Args() employeesArgs: EmployeesArgs) {
-        const employees = this.employeeService.findAll(employeesArgs);
+    async employees(@Args() employeesArgs: EmployeesArgs) {
+        const employees = await this.employeeService.findAll(employeesArgs);
         return employees;
         
     }
 
-    @Query(returns => Employee)
+    @Query(returns => Employee, { nullable: true })
     async employee(@Arg("id") id: number) {
         const employee = await this.employeeService.findById(id);
-        console.log(employee)
         if (employee === undefined) {
-            console.log("test")
             return null;
         }
         return employee;

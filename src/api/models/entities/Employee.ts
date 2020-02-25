@@ -5,6 +5,7 @@ import {
   GraphQLDate,
 } from 'graphql-iso-date';
 import { Salary } from './Salary';
+import { Title } from './Title';
 
 export enum Gender {
     Male = 'M',
@@ -38,6 +39,9 @@ export class Employee {
     hireDate: Date;
     // Relations
     @Field(() => [Salary], { nullable: true })
-    @OneToMany(type => Salary, salary => salary.employee)
+    @OneToMany(type => Salary, salary => salary.employee, { lazy: true })
     salaries: Salary[];
+    @Field(() => [Title], { nullable: true })
+    @OneToMany(type => Title, title => title.employee, { lazy: true })
+    titles: Title[];
 }

@@ -1,31 +1,23 @@
 import {Service} from "typedi";
-import {EntityManager, OrderByCondition} from "typeorm";
-import {InjectManager} from "typeorm-typedi-extensions";
+import {EntityManager, OrderByCondition, Repository, EntityRepository, AbstractRepository} from "typeorm";
+import {InjectManager, InjectRepository} from "typeorm-typedi-extensions";
 import { Employee } from '../models/entities/Employee';
 
 @Service()
-export class EmployeeRepository {
+@EntityRepository(Employee)
+export class EmployeeRepository extends AbstractRepository<Employee>{
 
-    private entityManager: EntityManager
-
-    constructor(@InjectManager() entityManager: EntityManager) {
-        this.entityManager = entityManager
+    public findAll(skip: number, take: number, orderBy: OrderByCondition) : Promise<Employee[]> {
+        return this.repository.find({
+            skip: skip,
+            take: take,
+            order: orderBy
+        });
     }
 
-    public async findAll(limit: number, offset:number, orderBy: OrderByCondition): Promise<Employee[]> {
-        const query = this.entityManager.createQueryBuilder(Employee, 'employees');
-        query.limit(limit).offset(offset)
-        let i = 1;
-        query.orderBy(orderBy);
-        
-        return query.getMany();
+    public findOneById(id: number): Promise<Employee> {
+        return this.repository.findOne({id: id});
     }
 
-    public async findByID(id: number): Promise<Employee> {
-        const query = this.entityManager.createQueryBuilder(Employee, 'employees');
-        query.where("id = :id", {id: id});
-        const employee : Promise<Employee> = query.getOne();
-        return employee;
-    }
     
 }
